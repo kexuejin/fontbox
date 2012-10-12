@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="fontbox" default="update">
+
+  <property name="src" value="src"/>
+  <property name="ant" value="ant"/>
+  <property name="bin" value="bin"/>
+  <property name="lib" value="lib"/>
+  <property name="dst" value="."/>
+
+  <property name="compiler.source" value="1.5"/>
+  <property name="compiler.target" value="1.5"/>
+  <property name="compiler.debug" value="true"/>
+  <property name="compiler.encoding" value="utf-8"/>
+
+  <import file="ant/build.in.version.xml"/>
+  <property file="${user.home}/update.properties"/>
+  <import file="ant/build.in.update.xml"/>
+
+  <path id="lib.path">
+
+    <fileset dir="${lib}">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+  <target name="update" if="fontbox.update" depends="jar" description="Copy jar product to targets defined in '{user.home}/update.properties' by name 'fontbox.update'.">
+
+    <do-update src="${target.fontbox.jar}" tgt="${fontbox.update}" />
+  </target>
+
+  <target name="jar" depends="compile" description="Package bin to target jar, clean bin.">
+
+    <delete file="${existing.fontbox.jar}"/>
+
+    <jar jarfile="${target.fontbox.jar}" basedir="${bin}" >
+    </jar>
+    <delete dir="${bin}"/>
+  </target>
+
+  <target name="compile" depends="version" description="Compile src to bin">
+    <delete dir="${bin}"/>
+    <mkdir dir="${bin}"/>
+    <copy todir="${bin}">
+      <fileset dir="${src}" includes="**/*.properties"/>
+      <fileset dir="${src}" includes="**/*.txt"/>
+      <fileset dir="${src}" includes="**/*.xml"/>
+    </copy>
+    <javac srcdir="${src}" destdir="${bin}" debug="${compiler.debug}" encoding="${compiler.encoding}"
+           source="${compiler.source}" target="${compiler.target}">
+    </javac>
+  </target>
+
+  <target name="clean" description="Delete products">
+    <delete dir="${bin}"/>
+  </target>
+
+  <target name="version" description="Report current version.">
+    <version/>
+    <property name="target.fontbox.jar" value="${dst}/${ant.project.name}-${this.version}.jar"/>
+
+    <java outputproperty="existing.fontbox.jar" classpath="${ant}" classname="JarPublisher" failonerror="true" fork="true">
+      <arg value="${ant.project.name}"/>
+    </java>
+
+  </target>
+
+  <target name="build" description="Increment version build number and report result.">
+    <version-build/>
+    <version/>
+  </target>
+
+  <target name="major" description="Increment version major number and report result.">
+    <version-major/>
+    <version/>
+  </target>
+
+  <target name="minor" description="Increment version minor number and report result.">
+    <version-minor/>
+    <version/>
+  </target>
+
+  <target name="android-version">
+
+    <java outputproperty="android.lib.path" classpath="${ant}" classname="AndroidLibPath" failonerror="true" fork="true">
+
+      <arg value="10"/>
+    </java>
+
+    <echo message="Android-Lib-Path: ${android.lib.path}"/>
+
+  </target>
+
+</project>
