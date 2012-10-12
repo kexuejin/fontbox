@@ -14,10 +14,10 @@ The "TTF problem" is that the TTF writers employed by font authors are
 not clear on the composition of glyph path data.  As a result, TTF
 readers need to guess at the intention of the author and writer
 through a convoluted series of heuristics.  Naturally, the most common
-TTF readers' heuristics have become canonical.  The "ground zero" of
-this issue was the Adobe TTF Font Rendering library, which adopted
-heuristics rather than support the format.  Many others have since
-reverse engineered this state of affairs.
+TTF readers' heuristics have become canonical.  The historical origin
+of this issue is with the Adobe TTF Font Rendering library, which
+adopted heuristics rather than support the format.  Many others have
+since reverse engineered this state of affairs.
 
 A demonstration would pick Glyphs from TTF files found in the wild and
 display their outlines.  This is trivial as the java.awt.Graphics2D
